@@ -67,7 +67,7 @@ class MusicRootImpl(
     private val stack = childStack(
         source = navigation,
         serializer = serializer(),
-        initialConfiguration = Configuration.Dashboard,
+        initialConfiguration = Configuration.Login,
         handleBackButton = true,
         childFactory = ::createChild
     )
@@ -75,7 +75,9 @@ class MusicRootImpl(
     private fun createChild(
         configuration: Configuration, componentContext: ComponentContext
     ): MusicRoot.Child = when (configuration) {
-        Configuration.Dashboard -> MusicRoot.Child.Dashboard(
+        Configuration.Login -> MusicRoot.Child.Login
+
+        is Configuration.Dashboard -> MusicRoot.Child.Dashboard(
             dashboardMain(componentContext, ::dashboardOutput)
         )
 
@@ -156,6 +158,9 @@ class MusicRootImpl(
 
     @Serializable
     private sealed class Configuration {
+
+        @Serializable
+        data object Login: Configuration()
         @Serializable
         data object Dashboard : Configuration()
 

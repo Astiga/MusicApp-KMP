@@ -13,6 +13,7 @@ import musicapp.chartdetails.ChartDetailsScreenLarge
 import musicapp.dashboard.DashboardScreen
 import musicapp.dashboard.DashboardScreenLarge
 import musicapp.decompose.MusicRoot
+import musicapp.login.LoginScreen
 import musicapp.playerview.PlayerView
 
 @Composable
@@ -29,6 +30,10 @@ internal fun MainCommon(
                     stack = rootComponent.childStack
                 ) {
                     when (val child = it.instance) {
+                        is MusicRoot.Child.Login -> {
+                            LoginScreen()
+                        }
+
                         is MusicRoot.Child.Dashboard -> {
                             if (isLargeScreen)
                                 DashboardScreenLarge(child.dashboardMainComponent)
