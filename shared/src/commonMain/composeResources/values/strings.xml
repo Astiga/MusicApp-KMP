@@ -14,4 +14,25 @@
     <string name="pause">Pause</string>
     <string name="rewind_5_sec">Rewind by 5 seconds</string>
     <string name="forward_5_sec">Forward by 5 seconds</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password or email address is incorrect; make sure you use the token if two-factor authentication is enabled</string>
+    <string name="error_field_required">This field is required</string>
+
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_test_connection_title">Test connection</string>
+    <string name="settings_accounts_add">Add account</string>
+    <string name="settings_accounts_remove">Remove account from app</string>
+    <string name="settings_accounts_register">Create an account</string>
+    <string name="settings_delete_account_title">Remove account from app and Astiga</string>
+    <string name="settings_delete_account_confirm">Do you want to remove your Astiga account from the app?</string>
+    <string name="settings_delete_account_from_server_confirm">Do you want to remove your account from the app and the Astiga service? Astiga will disconnect from your storage and delete its records of your music library.</string>
+    <string name="settings_accounts_title">Accounts</string>
 </resources>
