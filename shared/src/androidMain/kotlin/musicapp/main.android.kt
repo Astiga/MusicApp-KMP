@@ -1,11 +1,9 @@
 package musicapp
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.seiko.imageloader.Bitmap
 import com.seiko.imageloader.ImageLoader
@@ -21,7 +19,7 @@ import musicapp.decompose.MusicRootImpl
 
 @Composable
 fun MainAndroid(root: MusicRootImpl) {
-    Column(Modifier.background(color = Color(0xFF1A1E1F))) {
+    Column(Modifier) {
         val context = LocalContext.current
         CompositionLocalProvider(
             LocalImageLoader provides ImageLoader {
