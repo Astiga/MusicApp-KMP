@@ -9,7 +9,7 @@ import SwiftUI
 import shared
 
 struct ComposeView: UIViewControllerRepresentable {
-    var lifecycleRegistyr: LifecycleHolder
+    var lifecycleRegister: LifecycleHolder
 
     func makeUIViewController(context: Context) -> UIViewController {
         Main_iosKt.MainiOS(lifecycle: lifecycleRegistyr.lifecycle)
@@ -19,7 +19,7 @@ struct ComposeView: UIViewControllerRepresentable {
 }
 
 struct ContentView: View {
-    var lifecycleRegistyr: LifecycleHolder
+    var lifecycleRegister: LifecycleHolder
     var body: some View {
         ComposeView(lifecycleRegistyr:lifecycleRegistyr)
                 .ignoresSafeArea() // Compose has own keyboard handler
