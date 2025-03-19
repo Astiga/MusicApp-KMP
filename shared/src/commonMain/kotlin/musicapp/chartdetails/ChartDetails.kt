@@ -19,14 +19,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,22 +40,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.seiko.imageloader.rememberImagePainter
 import musicapp.decompose.ChartDetailsComponent
 import musicapp.network.models.topfiftycharts.Item
 import musicapp.network.models.topfiftycharts.TopFiftyCharts
-import com.seiko.imageloader.rememberImagePainter
 import musicapp_kmp.shared.generated.resources.Res
 import musicapp_kmp.shared.generated.resources.go_back
 import musicapp_kmp.shared.generated.resources.play_all
 import musicapp_kmp.shared.generated.resources.songs
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
 
 /**
  * Created by abdulbasit on 28/02/2023.
  */
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun ChartDetailsScreen(
     chartDetailsComponent: ChartDetailsComponent,
@@ -111,7 +109,6 @@ internal fun Failure(message: String) {
 }
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun ChartDetailsView(
     chartDetails: TopFiftyCharts,
@@ -158,16 +155,16 @@ internal fun ChartDetailsView(
                 )
                 Text(
                     text = chartDetails.name.orEmpty(),
-                    style = MaterialTheme.typography.h4.copy(color = Color(0XFFA4C7C6))
+                    style = MaterialTheme.typography.headlineMedium.copy(color = Color(0XFFA4C7C6))
                 )
                 Text(
                     text = chartDetails.description.orEmpty(),
-                    style = MaterialTheme.typography.body2.copy(color = Color(0XFFEFEEE0)),
+                    style = MaterialTheme.typography.bodyMedium.copy(color = Color(0XFFEFEEE0)),
                     modifier = Modifier.padding(top = 8.dp)
                 )
                 Text(
                     text = "${chartDetails.tracks?.items?.size ?: 0} ${stringResource(Res.string.songs)}",
-                    style = MaterialTheme.typography.body2.copy(color = Color(0XFFEFEEE0)),
+                    style = MaterialTheme.typography.bodyMedium.copy(color = Color(0XFFEFEEE0)),
                     modifier = Modifier.padding(top = 8.dp)
                 )
                 Spacer(Modifier.height(32.dp).fillMaxWidth())
@@ -224,7 +221,7 @@ internal fun ChartDetailsView(
                         Column(Modifier.weight(1f).padding(start = 8.dp).align(Alignment.Top)) {
                             Text(
                                 text = track.track?.name.orEmpty(),
-                                style = MaterialTheme.typography.caption.copy(
+                                style = MaterialTheme.typography.bodySmall.copy(
                                     color = Color(
                                         0XFFEFEEE0
                                     )
@@ -233,7 +230,7 @@ internal fun ChartDetailsView(
                             Text(
                                 text = track.track?.artists?.map { it.name }?.joinToString(",")
                                     .orEmpty(),
-                                style = MaterialTheme.typography.caption.copy(
+                                style = MaterialTheme.typography.bodySmall.copy(
                                     color = Color(
                                         0XFFEFEEE0
                                     )
@@ -243,7 +240,7 @@ internal fun ChartDetailsView(
                         }
                         Text(
                             text = "${(((track.track?.durationMs ?: 0) / (1000 * 60)) % 60)}:${(((track.track?.durationMs ?: 0) / (1000)) % 60)}",
-                            style = MaterialTheme.typography.caption.copy(color = Color(0XFFEFEEE0)),
+                            style = MaterialTheme.typography.bodySmall.copy(color = Color(0XFFEFEEE0)),
                             modifier = Modifier.align(
                                 Alignment.Bottom
                             )
@@ -258,7 +255,6 @@ internal fun ChartDetailsView(
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun OptionChips(onPlayAllClicked: (List<Item>) -> Unit, items: List<Item>) {
     Box(
@@ -277,7 +273,7 @@ internal fun OptionChips(onPlayAllClicked: (List<Item>) -> Unit, items: List<Ite
             )
             Text(
                 text = stringResource(Res.string.play_all),
-                style = MaterialTheme.typography.caption.copy(color = Color(0XFFEFEEE0))
+                style = MaterialTheme.typography.bodySmall.copy(color = Color(0XFFEFEEE0))
             )
         }
     }
