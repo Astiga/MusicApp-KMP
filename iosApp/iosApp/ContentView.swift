@@ -12,7 +12,7 @@ struct ComposeView: UIViewControllerRepresentable {
     var lifecycleRegister: LifecycleHolder
 
     func makeUIViewController(context: Context) -> UIViewController {
-        Main_iosKt.MainiOS(lifecycle: lifecycleRegistyr.lifecycle)
+        Main_iosKt.MainiOS(lifecycle: lifecycleRegister.lifecycle)
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
@@ -21,7 +21,7 @@ struct ComposeView: UIViewControllerRepresentable {
 struct ContentView: View {
     var lifecycleRegister: LifecycleHolder
     var body: some View {
-        ComposeView(lifecycleRegistyr:lifecycleRegistyr)
+        ComposeView(lifecycleRegister:lifecycleRegister)
                 .ignoresSafeArea() // Compose has own keyboard handler
     }
 }

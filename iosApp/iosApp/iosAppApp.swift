@@ -30,7 +30,7 @@ struct iosAppApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(lifecycleRegistyr: lifecycleHolder)
+            ContentView(lifecycleRegister: lifecycleHolder)
         }
     }
 }
