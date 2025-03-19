@@ -71,7 +71,7 @@ kotlin {
             with(compose) {
                 implementation(ui)
                 implementation(foundation)
-                implementation(material)
+                implementation(material3)
                 implementation(runtime)
                 implementation(components.resources)
             }
