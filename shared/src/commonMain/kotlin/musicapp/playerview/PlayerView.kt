@@ -4,17 +4,30 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +40,15 @@ import musicapp.decompose.PlayerComponent
 import musicapp.network.models.topfiftycharts.Item
 import musicapp.player.MediaPlayerController
 import musicapp.player.MediaPlayerListener
-import musicapp_kmp.shared.generated.resources.*
+import musicapp_kmp.shared.generated.resources.Res
+import musicapp_kmp.shared.generated.resources.back
+import musicapp_kmp.shared.generated.resources.baseline_pause_24
+import musicapp_kmp.shared.generated.resources.forward
+import musicapp_kmp.shared.generated.resources.forward_5_sec
+import musicapp_kmp.shared.generated.resources.pause
+import musicapp_kmp.shared.generated.resources.play
+import musicapp_kmp.shared.generated.resources.rewind
+import musicapp_kmp.shared.generated.resources.rewind_5_sec
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -84,7 +105,7 @@ internal fun PlayerView(playerComponent: PlayerComponent) {
             }
             Column(Modifier.weight(1f).padding(start = 8.dp).align(Alignment.Top)) {
                 Text(
-                    text = selectedTrack.track?.name.orEmpty(), style = MaterialTheme.typography.caption.copy(
+                    text = selectedTrack.track?.name.orEmpty(), style = MaterialTheme.typography.bodySmall.copy(
                         color = Color(
                             0XFFEFEEE0
                         )
@@ -92,7 +113,7 @@ internal fun PlayerView(playerComponent: PlayerComponent) {
                 )
                 Text(
                     text = selectedTrack.track?.artists?.map { it.name }?.joinToString(",").orEmpty(),
-                    style = MaterialTheme.typography.caption.copy(
+                    style = MaterialTheme.typography.bodySmall.copy(
                         color = Color(
                             0XFFEFEEE0
                         )
