@@ -1,10 +1,10 @@
 package musicapp
 
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Shapes
-import androidx.compose.material.Typography
-import androidx.compose.material.darkColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -17,9 +17,8 @@ import androidx.compose.ui.unit.sp
 internal fun MusicAppTheme(
     content: @Composable () -> Unit
 ) {
-    val colors = darkColors(
+    val colors = darkColorScheme(
         primary = Color(0xFF1D2123),
-        primaryVariant = Color(0xFF3700B3),
         secondary = Color(0xFFFACD66),
         surface = Color(0xFF1E1E1E),
         background = Color(0xFF1E1E1E),
@@ -27,7 +26,7 @@ internal fun MusicAppTheme(
     )
 
     val typography = Typography(
-        body1 = TextStyle(
+        bodyLarge = TextStyle(
             fontFamily = FontFamily.Default, fontWeight = FontWeight.Normal, fontSize = 16.sp
         )
     )
@@ -38,6 +37,6 @@ internal fun MusicAppTheme(
     )
 
     MaterialTheme(
-        colors = colors, typography = typography, shapes = shapes, content = content
+        colorScheme = colors, typography = typography, shapes = shapes, content = content
     )
 }
