@@ -22,15 +22,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import musicapp.theme.gradientBrush
 import musicapp_kmp.shared.generated.resources.Res
 import musicapp_kmp.shared.generated.resources.action_sign_in
 import musicapp_kmp.shared.generated.resources.ic_logo_text
@@ -47,15 +45,7 @@ fun LoginScreen() {
     var isLoading by remember { mutableStateOf(false) }
     val uriHandler = LocalUriHandler.current
 
-    val lightPrimaryLighter =
-        Color(0xFF8F89F8) // Replace with actual color from @color/lightPrimaryLighter
-    val lightPrimary = Color(0xFF605ca8) // Replace with actual color from @color/lightPrimary
 
-    val gradientBrush = Brush.linearGradient(
-        colors = listOf(lightPrimaryLighter, lightPrimary),
-        start = Offset(0f, 0f),
-        end = Offset(0f, Float.POSITIVE_INFINITY)
-    )
 
     Column(
         modifier = Modifier
