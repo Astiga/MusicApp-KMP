@@ -3,6 +3,7 @@ package musicapp.chartdetails
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,17 +17,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,10 +40,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.seiko.imageloader.rememberImagePainter
 import musicapp.decompose.ChartDetailsComponent
 import musicapp.network.models.topfiftycharts.Item
 import musicapp.network.models.topfiftycharts.TopFiftyCharts
-import com.seiko.imageloader.rememberImagePainter
 import musicapp_kmp.shared.generated.resources.Res
 import musicapp_kmp.shared.generated.resources.forward
 import musicapp_kmp.shared.generated.resources.play_all
@@ -149,16 +149,16 @@ internal fun ChartDetailsViewLarge(
                     ) {
                         Text(
                             text = chartDetails.name.orEmpty(),
-                            style = MaterialTheme.typography.h4.copy(color = Color(0XFFA4C7C6))
+                            style = MaterialTheme.typography.headlineMedium.copy(color = Color(0XFFA4C7C6))
                         )
                         Text(
                             text = chartDetails.description.orEmpty(),
-                            style = MaterialTheme.typography.body2.copy(color = Color(0XFFEFEEE0)),
+                            style = MaterialTheme.typography.bodyMedium.copy(color = Color(0XFFEFEEE0)),
                             modifier = Modifier.padding(top = 8.dp)
                         )
                         Text(
                             text = "${chartDetails.tracks?.items?.size ?: 0} ${stringResource(Res.string.songs)}}",
-                            style = MaterialTheme.typography.body2.copy(color = Color(0XFFEFEEE0)),
+                            style = MaterialTheme.typography.bodyMedium.copy(color = Color(0XFFEFEEE0)),
                             modifier = Modifier.padding(top = 10.dp)
                         )
                         Spacer(Modifier.height(40.dp).fillMaxWidth())
@@ -208,7 +208,7 @@ internal fun ChartDetailsViewLarge(
                     Column(Modifier.weight(1f).padding(start = 8.dp).align(Alignment.Top)) {
                         Text(
                             text = track.track?.name.orEmpty(),
-                            style = MaterialTheme.typography.caption.copy(
+                            style = MaterialTheme.typography.bodySmall.copy(
                                 color = Color(
                                     0XFFEFEEE0
                                 )
@@ -217,7 +217,7 @@ internal fun ChartDetailsViewLarge(
                         Text(
                             text = track.track?.artists?.map { it.name }?.joinToString(",")
                                 .orEmpty(),
-                            style = MaterialTheme.typography.caption.copy(
+                            style = MaterialTheme.typography.bodySmall.copy(
                                 color = Color(
                                     0XFFEFEEE0
                                 )
@@ -227,7 +227,7 @@ internal fun ChartDetailsViewLarge(
                     }
                     Text(
                         text = "${(((track.track?.durationMs ?: 0) / (1000 * 60)) % 60)}:${(((track.track?.durationMs ?: 0) / (1000)) % 60)}",
-                        style = MaterialTheme.typography.caption.copy(color = Color(0XFFEFEEE0)),
+                        style = MaterialTheme.typography.bodySmall.copy(color = Color(0XFFEFEEE0)),
                         modifier = Modifier.align(
                             Alignment.Bottom
                         )
