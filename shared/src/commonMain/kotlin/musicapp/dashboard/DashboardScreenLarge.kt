@@ -14,11 +14,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -29,9 +29,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.seiko.imageloader.rememberImagePainter
 import musicapp.decompose.DashboardMainComponent
 import musicapp.network.models.topfiftycharts.TopFiftyCharts
-import com.seiko.imageloader.rememberImagePainter
 import musicapp_kmp.shared.generated.resources.Res
 import musicapp_kmp.shared.generated.resources.explore_details
 import musicapp_kmp.shared.generated.resources.likes
@@ -95,14 +95,14 @@ internal fun TopChartViewLarge(
         Column(modifier = Modifier.padding(16.dp).align(Alignment.BottomStart)) {
             Text(
                 topFiftyCharts.name.orEmpty(),
-                style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 color = Color.White
             )
             Text(
                 topFiftyCharts.description.orEmpty(),
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.bodyMedium,
                 color = Color.White,
                 modifier = Modifier.padding(top = 6.dp)
             )
@@ -115,7 +115,7 @@ internal fun TopChartViewLarge(
                 )
                 Text(
                     text = "${topFiftyCharts.followers?.total ?: 0} ${stringResource(Res.string.likes)}",
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = Color.White,
                     modifier = Modifier.padding(start = 16.dp)
                 )
