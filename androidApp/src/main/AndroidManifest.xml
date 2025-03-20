@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+            android:name="com.example.musicapp_kmp.MusicApplication"
             android:requestLegacyExternalStorage="true"
             android:label="Music App KMP"
             android:supportsRtl="true"
