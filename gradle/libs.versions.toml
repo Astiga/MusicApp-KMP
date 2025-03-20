@@ -1,5 +1,7 @@
 [versions]
 
+
+koin-core = "4.0.0"
 kotlin="2.1.10"
 compose-plugin="1.7.1"
 ktor="3.1.1"
@@ -48,6 +50,11 @@ image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "imag
 # Vlcj
 vlcj = { module = "uk.co.caprica:vlcj", version.ref = "vlcj" }
 
+# Koin
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-core" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-core" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin-core" }
+
 [plugins]
 # Multiplatform
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -75,4 +82,10 @@ ktor = [
 decompose = [
     "decompose",
     "decompose-compose"
+]
+
+koin = [
+    "koin-core",
+    "koin-android",
+    "koin-test"
 ]

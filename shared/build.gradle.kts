@@ -68,6 +68,8 @@ kotlin {
         val desktopMain by getting
 
         commonMain.dependencies {
+            implementation(libs.koin.core)
+
             with(compose) {
                 implementation(ui)
                 implementation(foundation)
@@ -90,6 +92,7 @@ kotlin {
 
         androidMain {
             dependencies {
+                implementation(libs.koin.android)
                 implementation(libs.androidx.media3.exoplayer)
             }
         }
