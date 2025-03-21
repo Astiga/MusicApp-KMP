@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.serializer
+import musicapp.network.AstigaApi
 import musicapp.network.SpotifyApi
 import musicapp.network.models.topfiftycharts.Item
 import musicapp.player.MediaPlayerController
@@ -32,6 +33,14 @@ class MusicRootImpl(
 ) : MusicRoot, ComponentContext by componentContext, KoinComponent {
     private val spotifyApi: SpotifyApi by inject()
     private val mediaPlayerController: MediaPlayerController by inject()
+    private val astigaApi: AstigaApi by inject()
+
+    private val login: (ComponentContext) -> LoginComponent = { childContext ->
+        LoginComponentImpl(
+            componentContext = childContext,
+            astigaApi = astigaApi
+        )
+    }
 
     private val dashboardMain: (ComponentContext, (DashboardMainComponent.Output) -> Unit) -> DashboardMainComponent = { childContext, output ->
         DashboardMainComponentImpl(
@@ -77,7 +86,9 @@ class MusicRootImpl(
     private fun createChild(
         configuration: Configuration, componentContext: ComponentContext
     ): MusicRoot.Child = when (configuration) {
-        Configuration.Login -> MusicRoot.Child.Login
+        Configuration.Login -> MusicRoot.Child.Login(
+            login(componentContext)
+        )
 
         is Configuration.Dashboard -> MusicRoot.Child.Dashboard(
             dashboardMain(componentContext, ::dashboardOutput)

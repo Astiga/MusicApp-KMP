@@ -13,9 +13,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,15 +42,13 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun LoginScreen() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+fun LoginScreen(loginComponent: musicapp.decompose.LoginComponent) {
+    var email by remember { mutableStateOf("abdulbasit5361234@gmail.com") }
+    var password by remember { mutableStateOf("XbKWfq4AYh4L6pK") }
     val uriHandler = LocalUriHandler.current
 
-    // Create the login component
-    val loginComponent = remember { LoginComponent() }
-    val loginState by loginComponent.loginState.collectAsState()
+    // Get the login state from the ViewModel
+    val loginState by loginComponent.viewModel.loginState.collectAsState()
 
     // Handle login state changes
     var showError by remember { mutableStateOf(false) }
@@ -78,7 +79,7 @@ fun LoginScreen() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (isLoading) {
+        if (loginState is LoginState.Loading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(bottom = 8.dp)
@@ -142,7 +143,7 @@ fun LoginScreen() {
             )
 
             Button(
-                onClick = { loginComponent.login(email, password) },
+                onClick = { loginComponent.viewModel.login(email, password) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
@@ -164,8 +165,4 @@ fun LoginScreen() {
             }
         }
     }
-
-
 }
-
-

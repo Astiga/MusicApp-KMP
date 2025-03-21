@@ -31,7 +31,7 @@ internal fun MainCommon(
                 ) {
                     when (val child = it.instance) {
                         is MusicRoot.Child.Login -> {
-                            LoginScreen()
+                            LoginScreen(child.loginComponent)
                         }
 
                         is MusicRoot.Child.Dashboard -> {

@@ -1,19 +1,29 @@
 package musicapp.login
 
+import com.arkivanov.essenty.instancekeeper.InstanceKeeper
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import musicapp.network.AstigaApi
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
- * Component for handling login functionality.
+ * ViewModel for handling login functionality.
  */
-class LoginComponent : KoinComponent {
-    private val astigaApi: AstigaApi by inject()
+class LoginViewModel(
+    private val astigaApi: AstigaApi
+) : InstanceKeeper.Instance {
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+        exception.printStackTrace()
+    }
+
+    private val job = SupervisorJob()
+    private val viewModelScope = CoroutineScope(Dispatchers.Main + coroutineExceptionHandler + job)
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Initial)
     val loginState: StateFlow<LoginState> = _loginState
@@ -29,7 +39,7 @@ class LoginComponent : KoinComponent {
 
         _loginState.value = LoginState.Loading
 
-        CoroutineScope(Dispatchers.Default).launch {
+        viewModelScope.launch {
             try {
                 val pingSuccess = astigaApi.ping(
                     username = username,
@@ -59,6 +69,17 @@ class LoginComponent : KoinComponent {
                 _loginState.value = LoginState.Error("An error occurred: ${e.message}")
             }
         }
+    }
+
+    /**
+     * Resets the login state to initial.
+     */
+    fun resetState() {
+        _loginState.value = LoginState.Initial
+    }
+
+    override fun onDestroy() {
+        viewModelScope.cancel()
     }
 }
 

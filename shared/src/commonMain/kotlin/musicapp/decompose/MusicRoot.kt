@@ -13,7 +13,7 @@ interface MusicRoot {
     val dialogOverlay: Value<ChildSlot<*, PlayerComponent>>
 
     sealed class Child {
-        data object Login : Child()
+        data class Login(val loginComponent: LoginComponent) : Child()
         data class Dashboard(val dashboardMainComponent: DashboardMainComponent) : Child()
         data class Details(val detailsComponent: ChartDetailsComponent) : Child()
     }
