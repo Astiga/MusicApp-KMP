@@ -45,7 +45,31 @@ fun LoginScreen() {
     var isLoading by remember { mutableStateOf(false) }
     val uriHandler = LocalUriHandler.current
 
+    // Create the login component
+    val loginComponent = remember { LoginComponent() }
+    val loginState by loginComponent.loginState.collectAsState()
 
+    // Handle login state changes
+    var showError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    LaunchedEffect(loginState) {
+        when (loginState) {
+            is LoginState.Error -> {
+                showError = true
+                errorMessage = (loginState as LoginState.Error).message
+            }
+            is LoginState.Success -> {
+                // In a real app, we would navigate to the next screen here
+                // For now, just show a success message
+                showError = true
+                errorMessage = "Login successful!"
+            }
+            else -> {
+                showError = false
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -59,6 +83,19 @@ fun LoginScreen() {
                 modifier = Modifier
                     .padding(bottom = 8.dp)
             )
+        }
+
+        if (showError) {
+            Snackbar(
+                modifier = Modifier.padding(8.dp),
+                action = {
+                    TextButton(onClick = { showError = false }) {
+                        Text("Dismiss")
+                    }
+                }
+            ) {
+                Text(errorMessage)
+            }
         }
 
         Column(
@@ -105,10 +142,11 @@ fun LoginScreen() {
             )
 
             Button(
-                onClick = { isLoading = true },
+                onClick = { loginComponent.login(email, password) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
+                    .padding(top = 16.dp),
+                enabled = loginState !is LoginState.Loading
             ) {
                 Text(text = stringResource(Res.string.action_sign_in))
             }

@@ -5,6 +5,8 @@ import musicapp.decompose.ChartDetailsComponentImpl
 import musicapp.decompose.DashboardMainComponent
 import musicapp.decompose.DashboardMainComponentImpl
 import musicapp.decompose.MusicRootImpl
+import musicapp.network.AstigaApi
+import musicapp.network.AstigaApiImpl
 import musicapp.network.SpotifyApi
 import musicapp.network.SpotifyApiImpl
 import org.koin.dsl.module
@@ -12,6 +14,10 @@ import org.koin.dsl.module
 val commonModule = module {
     single<SpotifyApi> { 
         SpotifyApiImpl()
+    }
+
+    single<AstigaApi> {
+        AstigaApiImpl()
     }
 
     factory { (componentContext: com.arkivanov.decompose.ComponentContext) ->
