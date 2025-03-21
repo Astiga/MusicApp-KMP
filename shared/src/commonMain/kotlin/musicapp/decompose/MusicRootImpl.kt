@@ -21,18 +21,36 @@ import kotlinx.serialization.serializer
 import musicapp.network.SpotifyApi
 import musicapp.network.models.topfiftycharts.Item
 import musicapp.player.MediaPlayerController
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by abdulbasit on 19/03/2023.
  */
 class MusicRootImpl(
     componentContext: ComponentContext,
-    private val mediaPlayerController: MediaPlayerController,
-    private val dashboardMain: (ComponentContext, (DashboardMainComponent.Output) -> Unit) -> DashboardMainComponent,
-    private val chartDetails: (
-        ComponentContext, playlistId: String, playingTrackId: String, chatDetailsInput: SharedFlow<ChartDetailsComponent.Input>, (ChartDetailsComponent.Output) -> Unit
-    ) -> ChartDetailsComponent,
-) : MusicRoot, ComponentContext by componentContext {
+) : MusicRoot, ComponentContext by componentContext, KoinComponent {
+    private val spotifyApi: SpotifyApi by inject()
+    private val mediaPlayerController: MediaPlayerController by inject()
+
+    private val dashboardMain: (ComponentContext, (DashboardMainComponent.Output) -> Unit) -> DashboardMainComponent = { childContext, output ->
+        DashboardMainComponentImpl(
+            componentContext = childContext,
+            spotifyApi = spotifyApi,
+            output = output
+        )
+    }
+
+    private val chartDetails: (ComponentContext, playlistId: String, playingTrackId: String, chatDetailsInput: SharedFlow<ChartDetailsComponent.Input>, (ChartDetailsComponent.Output) -> Unit) -> ChartDetailsComponent = { childContext, playlistId, playingTrackId, chartDetailsInput, output ->
+        ChartDetailsComponentImpl(
+            componentContext = childContext,
+            spotifyApi = spotifyApi,
+            playlistId = playlistId,
+            output = output,
+            playingTrackId = playingTrackId,
+            chatDetailsInput = chartDetailsInput
+        )
+    }
 
     //to keep track of the playing track
     private var currentPlayingTrack = "-1"
@@ -43,23 +61,7 @@ class MusicRootImpl(
         componentContext: ComponentContext,
         api: SpotifyApi,
         mediaPlayerController: MediaPlayerController
-    ) : this(componentContext = componentContext,
-        mediaPlayerController = mediaPlayerController,
-        dashboardMain = { childContext, output ->
-            DashboardMainComponentImpl(
-                componentContext = childContext, spotifyApi = api, output = output
-            )
-        },
-        chartDetails = { childContext, playlistId, playingTrackId, chartDetailsInput, output ->
-            ChartDetailsComponentImpl(
-                componentContext = childContext,
-                spotifyApi = api,
-                playlistId = playlistId,
-                output = output,
-                playingTrackId = playingTrackId,
-                chatDetailsInput = chartDetailsInput
-            )
-        })
+    ) : this(componentContext = componentContext)
 
     private val navigation = StackNavigation<Configuration>()
     private val dialogNavigation = SlotNavigation<DialogConfig>()
