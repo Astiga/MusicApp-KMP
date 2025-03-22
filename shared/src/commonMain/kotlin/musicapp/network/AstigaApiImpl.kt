@@ -1,16 +1,14 @@
 package musicapp.network
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.request.get
-import io.ktor.http.URLBuilder
-import io.ktor.http.encodedPath
-import io.ktor.http.takeFrom
-import io.ktor.serialization.kotlinx.json.json
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import musicapp.utils.EncodingUtils
 
 /**
  * Implementation of the Astiga API interface.
@@ -21,11 +19,12 @@ class AstigaApiImpl : AstigaApi {
         username: String,
         password: String,
         version: String,
-        client: String
+        client: String,
+        useBasicAuth: Boolean
     ): Boolean {
         return try {
             val response = httpClient.get {
-                astigaEndpoint("rest/ping", username, password, version, client)
+                astigaEndpoint("rest/ping", username, password, version, client, useBasicAuth)
             }.body<String>()
 
             // Check if the response contains the success status
@@ -40,11 +39,12 @@ class AstigaApiImpl : AstigaApi {
         username: String,
         password: String,
         version: String,
-        client: String
+        client: String,
+        useBasicAuth: Boolean
     ): Boolean {
         return try {
             val response = httpClient.get {
-                astigaEndpoint("rest/getLicense", username, password, version, client)
+                astigaEndpoint("rest/getLicense", username, password, version, client, useBasicAuth)
             }.body<String>()
 
             // Check if the response contains the success status
@@ -73,15 +73,28 @@ class AstigaApiImpl : AstigaApi {
         username: String,
         password: String,
         version: String,
-        client: String
+        client: String,
+        useBasicAuth: Boolean = false
     ) {
+        // Obfuscate password with "enc:" prefix and utf8HexEncode
+        val obfuscatedPassword = "enc:" + EncodingUtils.utf8HexEncode(password)
+
         url {
             takeFrom("https://play.asti.ga/")
             encodedPath = "$path.view"
-            parameters.append("u", username)
-            parameters.append("p", password)
-            parameters.append("v", version)
-            parameters.append("c", client)
+
+            if (useBasicAuth) {
+                // Use HTTP Basic Authentication
+                header(HttpHeaders.Authorization, EncodingUtils.basicAuthEncode(username, password))
+                parameters.append("v", version)
+                parameters.append("c", client)
+            } else {
+                // Use query parameters
+                parameters.append("u", username)
+                parameters.append("p", obfuscatedPassword)
+                parameters.append("v", version)
+                parameters.append("c", client)
+            }
         }
     }
 }
