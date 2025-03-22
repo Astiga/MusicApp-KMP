@@ -1,9 +1,9 @@
 package musicapp.network
 
-import musicapp.network.models.astiga.LicenseSuccess
-import musicapp.network.models.astiga.PingSuccess
-import musicapp.network.models.astiga.UserSuccess
-import kotlin.Result
+import musicapp.network.models.astiga.License
+import musicapp.network.models.astiga.PingResponseData
+import musicapp.network.models.astiga.SubsonicResponse
+import musicapp.network.models.astiga.User
 
 /**
  * Interface for the Astiga API.
@@ -22,7 +22,7 @@ interface AstigaApi {
         username: String,
         password: String,
         useBasicAuth: Boolean = false
-    ): Result<PingSuccess>
+    ): Result<SubsonicResponse<PingResponseData?>>
 
     /**
      * Validate the user license.
@@ -30,11 +30,10 @@ interface AstigaApi {
      *
      * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
      * @return Result containing LicenseSuccess on success, or an Exception on failure
-     * @throws IllegalStateException if ping() has not been called first
      */
     suspend fun getLicense(
         useBasicAuth: Boolean = false
-    ): Result<LicenseSuccess>
+    ): Result<SubsonicResponse<License?>>
 
     /**
      * Get user information.
@@ -43,10 +42,9 @@ interface AstigaApi {
      * @param targetUsername The username to get information for (usually the same as the stored username)
      * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
      * @return Result containing UserSuccess on success, or an Exception on failure
-     * @throws IllegalStateException if ping() has not been called first
      */
     suspend fun getUser(
         targetUsername: String,
         useBasicAuth: Boolean = false
-    ): Result<UserSuccess>
+    ): Result<User>
 }

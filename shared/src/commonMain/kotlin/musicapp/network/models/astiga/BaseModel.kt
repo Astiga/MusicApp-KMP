@@ -4,7 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PingResponseData(
+data class SubsonicResponse<T>(
+    @SerialName("subsonic-response")
+    val subsonicResponse: SubsonicResponseData<T>
+)
+
+@Serializable
+data class SubsonicResponseData<T>(
     @SerialName("status")
     val status: String,
 
@@ -18,5 +24,7 @@ data class PingResponseData(
     val error: String? = null,
 
     @SerialName("message")
-    val message: String? = null
+    val message: String? = null,
+
+    val data: T,
 )

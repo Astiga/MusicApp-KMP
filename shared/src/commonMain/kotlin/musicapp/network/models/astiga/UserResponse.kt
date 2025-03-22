@@ -4,37 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserResponse(
-    @SerialName("subsonic-response")
-    val subsonicResponse: UserResponseData
-) : SubsonicResponse {
-    override fun isSuccess(): Boolean {
-        return subsonicResponse.status == "ok"
-    }
-}
-
-@Serializable
-data class UserResponseData(
-    @SerialName("status")
-    val status: String,
-
-    @SerialName("version")
-    val version: String,
-
-    @SerialName("serverVersion")
-    val serverVersion: String? = null,
-
-    @SerialName("error")
-    val error: String? = null,
-
-    @SerialName("message")
-    val message: String? = null,
-
-    @SerialName("user")
-    val user: User
-)
-
-@Serializable
 data class User(
     @SerialName("username")
     val username: String,
