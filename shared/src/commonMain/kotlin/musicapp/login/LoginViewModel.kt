@@ -1,14 +1,9 @@
 package musicapp.login
 
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import musicapp.network.AstigaApi
 
 /**
@@ -45,16 +40,16 @@ class LoginViewModel(
                     username = username,
                     password = password
                 ).onSuccess { pingResponse ->
-                    // Ping successful, validate license
-                    astigaApi.getLicense().onSuccess { licenseResponse ->
-                        // License validation successful
-                        _loginState.value = LoginState.Success
-                    }.onFailure { error ->
-                        // License validation failed
-                        _loginState.value = LoginState.Error("License validation failed: ${error.message}")
+                    if (pingResponse.subsonicResponse.status == "ok") {
+                        astigaApi.getLicense().onSuccess { licenseResponse ->
+                            _loginState.value = LoginState.Success
+                        }.onFailure { error ->
+                            _loginState.value = LoginState.Error("License validation failed: ${error.message}")
+                        }
+                    } else {
+                        _loginState.value = LoginState.Error("Invalid username or password")
                     }
                 }.onFailure { error ->
-                    // Ping failed
                     _loginState.value = LoginState.Error("Invalid username or password: ${error.message}")
                 }
             } catch (e: Exception) {
@@ -63,9 +58,6 @@ class LoginViewModel(
         }
     }
 
-    /**
-     * Resets the login state to initial.
-     */
     fun resetState() {
         _loginState.value = LoginState.Initial
     }
