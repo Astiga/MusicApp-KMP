@@ -29,7 +29,7 @@ class AstigaApiImpl : AstigaApi {
     ): PingResponse {
         return try {
             httpClient.get {
-                astigaEndpoint("rest/ping", username, password, version, client, useBasicAuth)
+                astigaEndpoint(AstigaApiConstants.Endpoints.PING, username, password, version, client, useBasicAuth)
             }.body<PingResponse>()
         } catch (e: Exception) {
             // Log the error in a production app
@@ -53,7 +53,7 @@ class AstigaApiImpl : AstigaApi {
     ): LicenseResponse {
         return try {
             httpClient.get {
-                astigaEndpoint("rest/getLicense", username, password, version, client, useBasicAuth)
+                astigaEndpoint(AstigaApiConstants.Endpoints.GET_LICENSE, username, password, version, client, useBasicAuth)
             }.body<LicenseResponse>()
         } catch (e: Exception) {
             LicenseResponse(
@@ -102,7 +102,7 @@ class AstigaApiImpl : AstigaApi {
         val obfuscatedPassword = "enc:" + EncodingUtils.utf8HexEncode(password)
 
         url {
-            takeFrom("https://play.asti.ga/")
+            takeFrom(AstigaApiConstants.BASE_URL)
             encodedPath = "$path.view"
 
             if (useBasicAuth) {
