@@ -8,6 +8,11 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import musicapp.network.models.astiga.License
+import musicapp.network.models.astiga.LicenseResponse
+import musicapp.network.models.astiga.LicenseResponseData
+import musicapp.network.models.astiga.PingResponse
+import musicapp.network.models.astiga.PingResponseData
 import musicapp.utils.EncodingUtils
 
 /**
@@ -21,17 +26,21 @@ class AstigaApiImpl : AstigaApi {
         version: String,
         client: String,
         useBasicAuth: Boolean
-    ): Boolean {
+    ): PingResponse {
         return try {
-            val response = httpClient.get {
+            httpClient.get {
                 astigaEndpoint("rest/ping", username, password, version, client, useBasicAuth)
-            }.body<String>()
-
-            // Check if the response contains the success status
-            response.contains("status=\"ok\"")
+            }.body<PingResponse>()
         } catch (e: Exception) {
             // Log the error in a production app
-            false
+            PingResponse(
+                subsonicResponse = PingResponseData(
+                    status = "failed",
+                    version = version,
+                    error = "0",
+                    message = e.message ?: "Unknown error"
+                )
+            )
         }
     }
 
@@ -41,19 +50,28 @@ class AstigaApiImpl : AstigaApi {
         version: String,
         client: String,
         useBasicAuth: Boolean
-    ): Boolean {
+    ): LicenseResponse {
         return try {
-            val response = httpClient.get {
+            httpClient.get {
                 astigaEndpoint("rest/getLicense", username, password, version, client, useBasicAuth)
-            }.body<String>()
-
-            // Check if the response contains the success status
-            response.contains("status=\"ok\"")
+            }.body<LicenseResponse>()
         } catch (e: Exception) {
-            // Log the error in a production app
-            false
+            LicenseResponse(
+                subsonicResponse = LicenseResponseData(
+                    status = "failed",
+                    version = version,
+                    error = "0",
+                    message = e.message ?: "Unknown error",
+                    license = License(
+                        valid = false,
+                        email = "",
+                        licenseExpires = ""
+                    )
+                )
+            )
         }
     }
+
 
     private val httpClient = HttpClient {
         expectSuccess = true
@@ -64,7 +82,11 @@ class AstigaApiImpl : AstigaApi {
             socketTimeoutMillis = timeout
         }
         install(ContentNegotiation) {
-            json(Json { isLenient = true; ignoreUnknownKeys = true })
+            json(Json { 
+                isLenient = true
+                ignoreUnknownKeys = true
+                prettyPrint = true
+            })
         }
     }
 
@@ -95,6 +117,7 @@ class AstigaApiImpl : AstigaApi {
                 parameters.append("v", version)
                 parameters.append("c", client)
             }
+            parameters.append("f", "json")
         }
     }
 }

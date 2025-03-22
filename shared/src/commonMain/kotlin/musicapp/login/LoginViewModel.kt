@@ -41,23 +41,23 @@ class LoginViewModel(
 
         viewModelScope.launch {
             try {
-                val pingSuccess = astigaApi.ping(
+                val pingResponse = astigaApi.ping(
                     username = username,
                     password = password, // Password should already be in the format "enc:encrypted_password"
                     version = "1.2.0",
                     client = "Astiga"
                 )
 
-                if (pingSuccess) {
+                if (pingResponse.isSuccess()) {
                     // Validate license
-                    val licenseSuccess = astigaApi.getLicense(
+                    val licenseResponse = astigaApi.getLicense(
                         username = username,
                         password = password,
                         version = "1.2.0",
                         client = "Astiga"
                     )
 
-                    if (licenseSuccess) {
+                    if (licenseResponse.isSuccess()) {
                         _loginState.value = LoginState.Success
                     } else {
                         _loginState.value = LoginState.Error("License validation failed")

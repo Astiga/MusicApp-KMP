@@ -1,5 +1,8 @@
 package musicapp.network
 
+import musicapp.network.models.astiga.LicenseResponse
+import musicapp.network.models.astiga.PingResponse
+
 /**
  * Interface for the Astiga API.
  * Provides methods for authentication and license validation.
@@ -7,13 +10,13 @@ package musicapp.network
 interface AstigaApi {
     /**
      * Ping the server to check connectivity and authentication.
-     * 
+     *
      * @param username The username/email (URL encoded)
      * @param password The password (will be encrypted with "enc:" prefix and utf8HexEncode)
      * @param version The API version (e.g., "1.2.0")
      * @param client The client name (e.g., "Astiga")
      * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
-     * @return True if authentication is successful, false otherwise
+     * @return PingResponse object containing the response data
      */
     suspend fun ping(
         username: String,
@@ -21,17 +24,17 @@ interface AstigaApi {
         version: String = "1.2.0",
         client: String = "Astiga",
         useBasicAuth: Boolean = false
-    ): Boolean
+    ): PingResponse
 
     /**
      * Validate the user license.
-     * 
+     *
      * @param username The username/email (URL encoded)
      * @param password The password (will be encrypted with "enc:" prefix and utf8HexEncode)
      * @param version The API version (e.g., "1.2.0")
      * @param client The client name (e.g., "Astiga")
      * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
-     * @return True if license is valid, false otherwise
+     * @return LicenseResponse object containing the response data
      */
     suspend fun getLicense(
         username: String,
@@ -39,5 +42,5 @@ interface AstigaApi {
         version: String = "1.2.0",
         client: String = "Astiga",
         useBasicAuth: Boolean = false
-    ): Boolean
+    ): LicenseResponse
 }
