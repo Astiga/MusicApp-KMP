@@ -1,9 +1,9 @@
 package musicapp.di
 
-import musicapp.decompose.ChartDetailsComponent
-import musicapp.decompose.ChartDetailsComponentImpl
-import musicapp.decompose.DashboardMainComponent
-import musicapp.decompose.DashboardMainComponentImpl
+import musicapp.decompose.chartdetails.ChartDetailsComponent
+import musicapp.decompose.chartdetails.ChartDetailsComponentImpl
+import musicapp.decompose.dashboard.DashboardMainComponent
+import musicapp.decompose.dashboard.DashboardMainComponentImpl
 import musicapp.decompose.MusicRootImpl
 import musicapp.network.AstigaApi
 import musicapp.network.AstigaApiImpl

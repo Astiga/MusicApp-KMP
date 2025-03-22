@@ -1,4 +1,4 @@
-package musicapp.decompose
+package musicapp.decompose.player
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreate

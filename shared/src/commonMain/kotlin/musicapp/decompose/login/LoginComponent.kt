@@ -10,4 +10,10 @@ interface LoginComponent {
      * The ViewModel for this component.
      */
     val viewModel: LoginViewModel
+
+    fun onOutPut(output: Output)
+
+    sealed class Output {
+        data object OnLoginSuccessful : Output()
+    }
 }

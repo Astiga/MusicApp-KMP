@@ -5,11 +5,7 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +14,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.serializer
+import musicapp.decompose.chartdetails.ChartDetailsComponent
+import musicapp.decompose.chartdetails.ChartDetailsComponentImpl
+import musicapp.decompose.dashboard.DashboardMainComponent
+import musicapp.decompose.dashboard.DashboardMainComponentImpl
 import musicapp.decompose.login.LoginComponent
 import musicapp.decompose.login.LoginComponentImpl
+import musicapp.decompose.player.PlayerComponent
+import musicapp.decompose.player.PlayerComponentImpl
 import musicapp.network.AstigaApi
 import musicapp.network.SpotifyApi
 import musicapp.network.models.topfiftycharts.Item
@@ -37,31 +39,30 @@ class MusicRootImpl(
     private val mediaPlayerController: MediaPlayerController by inject()
     private val astigaApi: AstigaApi by inject()
 
-    private val login: (ComponentContext) -> LoginComponent = { childContext ->
+    private val login: (ComponentContext, (LoginComponent.Output) -> Unit) -> LoginComponent = { childContext, output ->
         LoginComponentImpl(
-            componentContext = childContext,
-            astigaApi = astigaApi
+            componentContext = childContext, astigaApi = astigaApi, output = output
         )
     }
 
-    private val dashboardMain: (ComponentContext, (DashboardMainComponent.Output) -> Unit) -> DashboardMainComponent = { childContext, output ->
-        DashboardMainComponentImpl(
-            componentContext = childContext,
-            spotifyApi = spotifyApi,
-            output = output
-        )
-    }
+    private val dashboardMain: (ComponentContext, (DashboardMainComponent.Output) -> Unit) -> DashboardMainComponent =
+        { childContext, output ->
+            DashboardMainComponentImpl(
+                componentContext = childContext, spotifyApi = spotifyApi, output = output
+            )
+        }
 
-    private val chartDetails: (ComponentContext, playlistId: String, playingTrackId: String, chatDetailsInput: SharedFlow<ChartDetailsComponent.Input>, (ChartDetailsComponent.Output) -> Unit) -> ChartDetailsComponent = { childContext, playlistId, playingTrackId, chartDetailsInput, output ->
-        ChartDetailsComponentImpl(
-            componentContext = childContext,
-            spotifyApi = spotifyApi,
-            playlistId = playlistId,
-            output = output,
-            playingTrackId = playingTrackId,
-            chatDetailsInput = chartDetailsInput
-        )
-    }
+    private val chartDetails: (ComponentContext, playlistId: String, playingTrackId: String, chatDetailsInput: SharedFlow<ChartDetailsComponent.Input>, (ChartDetailsComponent.Output) -> Unit) -> ChartDetailsComponent =
+        { childContext, playlistId, playingTrackId, chartDetailsInput, output ->
+            ChartDetailsComponentImpl(
+                componentContext = childContext,
+                spotifyApi = spotifyApi,
+                playlistId = playlistId,
+                output = output,
+                playingTrackId = playingTrackId,
+                chatDetailsInput = chartDetailsInput
+            )
+        }
 
     //to keep track of the playing track
     private var currentPlayingTrack = "-1"
@@ -69,9 +70,7 @@ class MusicRootImpl(
     private val chatDetailsInput = MutableSharedFlow<ChartDetailsComponent.Input>()
 
     constructor(
-        componentContext: ComponentContext,
-        api: SpotifyApi,
-        mediaPlayerController: MediaPlayerController
+        componentContext: ComponentContext, api: SpotifyApi, mediaPlayerController: MediaPlayerController
     ) : this(componentContext = componentContext)
 
     private val navigation = StackNavigation<Configuration>()
@@ -89,7 +88,7 @@ class MusicRootImpl(
         configuration: Configuration, componentContext: ComponentContext
     ): MusicRoot.Child = when (configuration) {
         Configuration.Login -> MusicRoot.Child.Login(
-            login(componentContext)
+            login(componentContext, ::loginOutput)
         )
 
         is Configuration.Dashboard -> MusicRoot.Child.Dashboard(
@@ -98,13 +97,17 @@ class MusicRootImpl(
 
         is Configuration.Details -> MusicRoot.Child.Details(
             chartDetails(
-                componentContext,
-                configuration.playlistId,
-                currentPlayingTrack,
-                chatDetailsInput,
-                ::detailsOutput
+                componentContext, configuration.playlistId, currentPlayingTrack, chatDetailsInput, ::detailsOutput
             )
         )
+    }
+
+    private fun loginOutput(output: LoginComponent.Output) {
+        when (output) {
+            LoginComponent.Output.OnLoginSuccessful -> navigation.push(
+                Configuration.Dashboard
+            )
+        }
     }
 
     private fun dashboardOutput(output: DashboardMainComponent.Output) {
@@ -136,7 +139,8 @@ class MusicRootImpl(
         }
     }
 
-    private val player = childSlot(source = dialogNavigation,
+    private val player = childSlot(
+        source = dialogNavigation,
         serializer = serializer(),
         initialConfiguration = { null },
         key = "PlayerView",
@@ -175,7 +179,8 @@ class MusicRootImpl(
     private sealed class Configuration {
 
         @Serializable
-        data object Login: Configuration()
+        data object Login : Configuration()
+
         @Serializable
         data object Dashboard : Configuration()
 
@@ -188,7 +193,6 @@ class MusicRootImpl(
 
     @Serializable
     private data class DialogConfig(
-        val playlist: List<Item>,
-        val selectedTrack: String = ""
+        val playlist: List<Item>, val selectedTrack: String = ""
     )
 }

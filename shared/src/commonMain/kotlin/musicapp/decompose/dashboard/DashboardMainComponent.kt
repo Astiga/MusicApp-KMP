@@ -1,4 +1,4 @@
-package musicapp.decompose
+package musicapp.decompose.dashboard
 
 import musicapp.dashboard.DashboardViewModel
 

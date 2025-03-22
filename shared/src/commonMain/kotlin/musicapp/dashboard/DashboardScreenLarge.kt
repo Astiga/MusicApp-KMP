@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.seiko.imageloader.rememberImagePainter
-import musicapp.decompose.DashboardMainComponent
+import musicapp.decompose.dashboard.DashboardMainComponent
 import musicapp.network.models.topfiftycharts.TopFiftyCharts
 import musicapp_kmp.shared.generated.resources.Res
 import musicapp_kmp.shared.generated.resources.explore_details

@@ -1,4 +1,4 @@
-package musicapp.decompose
+package musicapp.decompose.player
 
 import musicapp.network.models.topfiftycharts.Item
 import musicapp.playerview.PlayerViewModel

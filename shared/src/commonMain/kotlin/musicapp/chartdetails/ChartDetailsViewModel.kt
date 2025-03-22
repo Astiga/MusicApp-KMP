@@ -1,7 +1,7 @@
 package musicapp.chartdetails
 
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import musicapp.decompose.ChartDetailsComponent
+import musicapp.decompose.chartdetails.ChartDetailsComponent
 import musicapp.network.SpotifyApi
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope

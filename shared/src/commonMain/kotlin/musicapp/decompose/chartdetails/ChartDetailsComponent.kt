@@ -1,4 +1,4 @@
-package musicapp.decompose
+package musicapp.decompose.chartdetails
 
 import musicapp.chartdetails.ChartDetailsViewModel
 import musicapp.network.models.topfiftycharts.Item

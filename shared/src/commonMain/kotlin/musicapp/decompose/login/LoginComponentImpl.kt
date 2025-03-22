@@ -10,11 +10,16 @@ import musicapp.network.AstigaApi
  */
 class LoginComponentImpl(
     componentContext: ComponentContext,
-    private val astigaApi: AstigaApi
+    private val astigaApi: AstigaApi,
+    val output: (LoginComponent.Output) -> Unit,
 ) : LoginComponent, ComponentContext by componentContext {
-    
+
     override val viewModel: LoginViewModel
         get() = instanceKeeper.getOrCreate {
             LoginViewModel(astigaApi)
         }
+
+    override fun onOutPut(output: LoginComponent.Output) {
+        output(output)
+    }
 }

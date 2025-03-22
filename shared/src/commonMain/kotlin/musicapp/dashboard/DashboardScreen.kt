@@ -39,7 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.seiko.imageloader.rememberImagePainter
-import musicapp.decompose.DashboardMainComponent
+import musicapp.decompose.dashboard.DashboardMainComponent
 import musicapp.network.models.featuredplaylist.FeaturedPlayList
 import musicapp.network.models.newreleases.NewReleasedAlbums
 import musicapp.network.models.topfiftycharts.TopFiftyCharts
