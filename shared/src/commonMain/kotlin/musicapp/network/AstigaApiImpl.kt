@@ -10,6 +10,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import musicapp.network.models.astiga.*
 import musicapp.utils.EncodingUtils
+import kotlin.Result
 
 /**
  * Implementation of the Astiga API interface.
@@ -24,12 +25,12 @@ class AstigaApiImpl : AstigaApi {
         username: String,
         password: String,
         useBasicAuth: Boolean
-    ): PingResponse {
+    ): Result<PingSuccess> {
         storedUsername = username
         storedPassword = password
 
         return try {
-            httpClient.get {
+            val response = httpClient.get {
                 astigaEndpoint(
                     path = AstigaApiConstants.Endpoints.PING,
                     username = username,
@@ -37,27 +38,32 @@ class AstigaApiImpl : AstigaApi {
                     useBasicAuth = useBasicAuth
                 )
             }.body<PingResponse>()
-        } catch (e: Exception) {
-            PingResponse(
-                subsonicResponse = PingResponseData(
-                    status = "failed",
-                    version = AstigaApiConstants.API_VERSION,
-                    error = "0",
-                    message = e.message ?: "Unknown error"
+
+            if (response.isSuccess()) {
+                Result.success(
+                    PingSuccess(
+                        version = response.subsonicResponse.version,
+                        serverVersion = response.subsonicResponse.serverVersion
+                    )
                 )
-            )
+            } else {
+                Result.failure(
+                    Exception(response.subsonicResponse.message ?: "Unknown error")
+                )
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
     override suspend fun getLicense(
         useBasicAuth: Boolean
-    ): LicenseResponse {
+    ): Result<LicenseSuccess> {
+        try {
+            val username = storedUsername ?: throw IllegalStateException("Username not stored. Call ping() first.")
+            val password = storedPassword ?: throw IllegalStateException("Password not stored. Call ping() first.")
 
-        val username = storedUsername ?: throw IllegalStateException("Username not stored. Call ping() first.")
-        val password = storedPassword ?: throw IllegalStateException("Password not stored. Call ping() first.")
-
-        return try {
-            httpClient.get {
+            val response = httpClient.get {
                 astigaEndpoint(
                     path = AstigaApiConstants.Endpoints.GET_LICENSE,
                     username = username,
@@ -65,33 +71,34 @@ class AstigaApiImpl : AstigaApi {
                     useBasicAuth = useBasicAuth
                 )
             }.body<LicenseResponse>()
-        } catch (e: Exception) {
-            LicenseResponse(
-                subsonicResponse = LicenseResponseData(
-                    status = "failed",
-                    version = AstigaApiConstants.API_VERSION,
-                    error = "0",
-                    message = e.message ?: "Unknown error",
-                    license = License(
-                        valid = false,
-                        email = "",
-                        licenseExpires = ""
+
+            return if (response.isSuccess()) {
+                Result.success(
+                    LicenseSuccess(
+                        version = response.subsonicResponse.version,
+                        serverVersion = response.subsonicResponse.serverVersion,
+                        license = response.subsonicResponse.license
                     )
                 )
-            )
+            } else {
+                Result.failure(
+                    Exception(response.subsonicResponse.message ?: "Unknown error")
+                )
+            }
+        } catch (e: Exception) {
+            return Result.failure(e)
         }
     }
 
     override suspend fun getUser(
         targetUsername: String,
         useBasicAuth: Boolean
-    ): UserResponse {
+    ): Result<UserSuccess> {
+        try {
+            val username = storedUsername ?: throw IllegalStateException("Username not stored. Call ping() first.")
+            val password = storedPassword ?: throw IllegalStateException("Password not stored. Call ping() first.")
 
-        val username = storedUsername ?: throw IllegalStateException("Username not stored. Call ping() first.")
-        val password = storedPassword ?: throw IllegalStateException("Password not stored. Call ping() first.")
-
-        return try {
-            httpClient.get {
+            val response = httpClient.get {
                 astigaEndpoint(
                     path = AstigaApiConstants.Endpoints.GET_USER,
                     username = username,
@@ -100,31 +107,22 @@ class AstigaApiImpl : AstigaApi {
                     additionalParams = mapOf("username" to targetUsername)
                 )
             }.body<UserResponse>()
-        } catch (e: Exception) {
-            UserResponse(
-                subsonicResponse = UserResponseData(
-                    status = "failed",
-                    version = AstigaApiConstants.API_VERSION,
-                    error = "0",
-                    message = e.message ?: "Unknown error",
-                    user = User(
-                        username = "",
-                        email = "",
-                        scrobblingEnabled = false,
-                        adminRole = false,
-                        settingsRole = false,
-                        downloadRole = false,
-                        uploadRole = false,
-                        playlistRole = false,
-                        coverArtRole = false,
-                        commentRole = false,
-                        podcastRole = false,
-                        streamRole = false,
-                        jukeboxRole = false,
-                        shareRole = false
+
+            return if (response.isSuccess()) {
+                Result.success(
+                    UserSuccess(
+                        version = response.subsonicResponse.version,
+                        serverVersion = response.subsonicResponse.serverVersion,
+                        user = response.subsonicResponse.user
                     )
                 )
-            )
+            } else {
+                Result.failure(
+                    Exception(response.subsonicResponse.message ?: "Unknown error")
+                )
+            }
+        } catch (e: Exception) {
+            return Result.failure(e)
         }
     }
 

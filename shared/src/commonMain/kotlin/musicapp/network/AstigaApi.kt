@@ -1,8 +1,9 @@
 package musicapp.network
 
-import musicapp.network.models.astiga.LicenseResponse
-import musicapp.network.models.astiga.PingResponse
-import musicapp.network.models.astiga.UserResponse
+import musicapp.network.models.astiga.LicenseSuccess
+import musicapp.network.models.astiga.PingSuccess
+import musicapp.network.models.astiga.UserSuccess
+import kotlin.Result
 
 /**
  * Interface for the Astiga API.
@@ -15,24 +16,25 @@ interface AstigaApi {
      * @param username The username/email (URL encoded)
      * @param password The password (will be encrypted with "enc:" prefix and utf8HexEncode)
      * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
-     * @return PingResponse object containing the response data
+     * @return Result containing PingSuccess on success, or an Exception on failure
      */
     suspend fun ping(
         username: String,
         password: String,
         useBasicAuth: Boolean = false
-    ): PingResponse
+    ): Result<PingSuccess>
 
     /**
      * Validate the user license.
+     * Uses the credentials stored from the last call to ping().
      *
      * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
-     * @return LicenseResponse object containing the response data
+     * @return Result containing LicenseSuccess on success, or an Exception on failure
      * @throws IllegalStateException if ping() has not been called first
      */
     suspend fun getLicense(
         useBasicAuth: Boolean = false
-    ): LicenseResponse
+    ): Result<LicenseSuccess>
 
     /**
      * Get user information.
@@ -40,11 +42,11 @@ interface AstigaApi {
      *
      * @param targetUsername The username to get information for (usually the same as the stored username)
      * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
-     * @return UserResponse object containing the response data
+     * @return Result containing UserSuccess on success, or an Exception on failure
      * @throws IllegalStateException if ping() has not been called first
      */
     suspend fun getUser(
         targetUsername: String,
         useBasicAuth: Boolean = false
-    ): UserResponse
+    ): Result<UserSuccess>
 }

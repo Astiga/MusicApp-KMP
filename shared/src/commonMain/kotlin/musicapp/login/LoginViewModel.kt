@@ -41,22 +41,21 @@ class LoginViewModel(
 
         viewModelScope.launch {
             try {
-                val pingResponse = astigaApi.ping(
+                astigaApi.ping(
                     username = username,
                     password = password
-                )
-
-                if (pingResponse.isSuccess()) {
-                    // Validate license
-                    val licenseResponse = astigaApi.getLicense()
-
-                    if (licenseResponse.isSuccess()) {
+                ).onSuccess { pingSuccess ->
+                    // Ping successful, validate license
+                    astigaApi.getLicense().onSuccess { licenseSuccess ->
+                        // License validation successful
                         _loginState.value = LoginState.Success
-                    } else {
-                        _loginState.value = LoginState.Error("License validation failed")
+                    }.onFailure { error ->
+                        // License validation failed
+                        _loginState.value = LoginState.Error("License validation failed: ${error.message}")
                     }
-                } else {
-                    _loginState.value = LoginState.Error("Invalid username or password")
+                }.onFailure { error ->
+                    // Ping failed
+                    _loginState.value = LoginState.Error("Invalid username or password: ${error.message}")
                 }
             } catch (e: Exception) {
                 _loginState.value = LoginState.Error("An error occurred: ${e.message}")
