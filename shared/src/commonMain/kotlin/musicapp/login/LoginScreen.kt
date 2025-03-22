@@ -43,8 +43,8 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun LoginScreen(loginComponent: musicapp.decompose.LoginComponent) {
-    var email by remember { mutableStateOf("abdulbasit5361234@gmail.com") }
-    var password by remember { mutableStateOf("XbKWfq4AYh4L6pK") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     val uriHandler = LocalUriHandler.current
 
     // Get the login state from the ViewModel
