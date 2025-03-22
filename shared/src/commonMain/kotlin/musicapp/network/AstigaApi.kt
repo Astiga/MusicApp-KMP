@@ -46,5 +46,5 @@ interface AstigaApi {
     suspend fun getUser(
         targetUsername: String,
         useBasicAuth: Boolean = false
-    ): Result<User>
+    ): Result<SubsonicResponse<User?>>
 }

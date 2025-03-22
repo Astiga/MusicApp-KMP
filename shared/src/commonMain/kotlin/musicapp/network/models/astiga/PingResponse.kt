@@ -5,18 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PingResponseData(
-    @SerialName("status")
-    val status: String,
-
     @SerialName("version")
     val version: String,
-
-    @SerialName("serverVersion")
-    val serverVersion: String? = null,
-
-    @SerialName("error")
-    val error: String? = null,
-
-    @SerialName("message")
-    val message: String? = null
 )

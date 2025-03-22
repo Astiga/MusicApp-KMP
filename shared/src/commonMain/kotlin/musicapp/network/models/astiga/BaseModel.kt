@@ -26,5 +26,5 @@ data class SubsonicResponseData<T>(
     @SerialName("message")
     val message: String? = null,
 
-    val data: T,
+    val data: T? = null,
 )

@@ -44,9 +44,9 @@ class LoginViewModel(
                 astigaApi.ping(
                     username = username,
                     password = password
-                ).onSuccess { pingSuccess ->
+                ).onSuccess { pingResponse ->
                     // Ping successful, validate license
-                    astigaApi.getLicense().onSuccess { licenseSuccess ->
+                    astigaApi.getLicense().onSuccess { licenseResponse ->
                         // License validation successful
                         _loginState.value = LoginState.Success
                     }.onFailure { error ->
