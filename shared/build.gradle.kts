@@ -90,6 +90,11 @@ kotlin {
             }
         }
 
+        commonTest.dependencies {
+            implementation(libs.bundles.testing)
+            implementation(libs.kotlin.test.junit)
+        }
+
         androidMain {
             dependencies {
                 implementation(libs.koin.android)
@@ -97,8 +102,17 @@ kotlin {
             }
         }
 
+        androidUnitTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.mockk)
+        }
+
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:${libs.versions.ktor.get()}")
+        }
+
+        iosTest.dependencies {
+            implementation(libs.kotlin.test)
         }
 
         desktopMain.dependencies {
@@ -106,11 +120,22 @@ kotlin {
             implementation(libs.vlcj)
         }
 
+        val desktopTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.mockk)
+            }
+        }
+
         jsMain.dependencies {
             implementation(compose.html.core)
             with(libs) {
                 implementation(ktor.client.js)
             }
+        }
+
+        jsTest.dependencies {
+            implementation(libs.kotlin.test)
         }
     }
 }
