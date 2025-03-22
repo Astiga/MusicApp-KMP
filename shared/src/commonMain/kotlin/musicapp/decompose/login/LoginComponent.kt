@@ -1,4 +1,4 @@
-package musicapp.decompose
+package musicapp.decompose.login
 
 import musicapp.login.LoginViewModel
 

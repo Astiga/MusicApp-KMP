@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import musicapp.decompose.login.LoginComponent
 import musicapp.theme.gradientBrush
 import musicapp_kmp.shared.generated.resources.Res
 import musicapp_kmp.shared.generated.resources.action_sign_in

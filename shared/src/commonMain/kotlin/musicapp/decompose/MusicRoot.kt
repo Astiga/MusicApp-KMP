@@ -3,6 +3,7 @@ package musicapp.decompose
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import musicapp.decompose.login.LoginComponent
 
 /**
  * Created by abdulbasit on 19/03/2023.
