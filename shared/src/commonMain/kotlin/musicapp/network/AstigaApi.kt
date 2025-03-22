@@ -2,6 +2,7 @@ package musicapp.network
 
 import musicapp.network.models.astiga.LicenseResponse
 import musicapp.network.models.astiga.PingResponse
+import musicapp.network.models.astiga.UserResponse
 
 /**
  * Interface for the Astiga API.
@@ -13,34 +14,37 @@ interface AstigaApi {
      *
      * @param username The username/email (URL encoded)
      * @param password The password (will be encrypted with "enc:" prefix and utf8HexEncode)
-     * @param version The API version (e.g., "1.2.0")
-     * @param client The client name (e.g., "Astiga")
      * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
      * @return PingResponse object containing the response data
      */
     suspend fun ping(
         username: String,
         password: String,
-        version: String = "1.2.0",
-        client: String = "Astiga",
         useBasicAuth: Boolean = false
     ): PingResponse
 
     /**
      * Validate the user license.
      *
-     * @param username The username/email (URL encoded)
-     * @param password The password (will be encrypted with "enc:" prefix and utf8HexEncode)
-     * @param version The API version (e.g., "1.2.0")
-     * @param client The client name (e.g., "Astiga")
      * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
      * @return LicenseResponse object containing the response data
+     * @throws IllegalStateException if ping() has not been called first
      */
     suspend fun getLicense(
-        username: String,
-        password: String,
-        version: String = "1.2.0",
-        client: String = "Astiga",
         useBasicAuth: Boolean = false
     ): LicenseResponse
+
+    /**
+     * Get user information.
+     * Uses the credentials stored from the last call to ping().
+     *
+     * @param targetUsername The username to get information for (usually the same as the stored username)
+     * @param useBasicAuth Whether to use HTTP Basic Authentication instead of query parameters
+     * @return UserResponse object containing the response data
+     * @throws IllegalStateException if ping() has not been called first
+     */
+    suspend fun getUser(
+        targetUsername: String,
+        useBasicAuth: Boolean = false
+    ): UserResponse
 }

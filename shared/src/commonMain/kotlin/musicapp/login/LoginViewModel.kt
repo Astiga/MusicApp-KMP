@@ -43,19 +43,12 @@ class LoginViewModel(
             try {
                 val pingResponse = astigaApi.ping(
                     username = username,
-                    password = password, // Password should already be in the format "enc:encrypted_password"
-                    version = "1.2.0",
-                    client = "Astiga"
+                    password = password
                 )
 
                 if (pingResponse.isSuccess()) {
                     // Validate license
-                    val licenseResponse = astigaApi.getLicense(
-                        username = username,
-                        password = password,
-                        version = "1.2.0",
-                        client = "Astiga"
-                    )
+                    val licenseResponse = astigaApi.getLicense()
 
                     if (licenseResponse.isSuccess()) {
                         _loginState.value = LoginState.Success

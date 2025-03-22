@@ -8,11 +8,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import musicapp.network.models.astiga.License
-import musicapp.network.models.astiga.LicenseResponse
-import musicapp.network.models.astiga.LicenseResponseData
-import musicapp.network.models.astiga.PingResponse
-import musicapp.network.models.astiga.PingResponseData
+import musicapp.network.models.astiga.*
 import musicapp.utils.EncodingUtils
 
 /**
@@ -20,23 +16,32 @@ import musicapp.utils.EncodingUtils
  */
 class AstigaApiImpl : AstigaApi {
 
+    private var storedUsername: String? = null
+    private var storedPassword: String? = null
+
+
     override suspend fun ping(
         username: String,
         password: String,
-        version: String,
-        client: String,
         useBasicAuth: Boolean
     ): PingResponse {
+        storedUsername = username
+        storedPassword = password
+
         return try {
             httpClient.get {
-                astigaEndpoint(AstigaApiConstants.Endpoints.PING, username, password, version, client, useBasicAuth)
+                astigaEndpoint(
+                    path = AstigaApiConstants.Endpoints.PING,
+                    username = username,
+                    password = password,
+                    useBasicAuth = useBasicAuth
+                )
             }.body<PingResponse>()
         } catch (e: Exception) {
-            // Log the error in a production app
             PingResponse(
                 subsonicResponse = PingResponseData(
                     status = "failed",
-                    version = version,
+                    version = AstigaApiConstants.API_VERSION,
                     error = "0",
                     message = e.message ?: "Unknown error"
                 )
@@ -45,27 +50,78 @@ class AstigaApiImpl : AstigaApi {
     }
 
     override suspend fun getLicense(
-        username: String,
-        password: String,
-        version: String,
-        client: String,
         useBasicAuth: Boolean
     ): LicenseResponse {
+
+        val username = storedUsername ?: throw IllegalStateException("Username not stored. Call ping() first.")
+        val password = storedPassword ?: throw IllegalStateException("Password not stored. Call ping() first.")
+
         return try {
             httpClient.get {
-                astigaEndpoint(AstigaApiConstants.Endpoints.GET_LICENSE, username, password, version, client, useBasicAuth)
+                astigaEndpoint(
+                    path = AstigaApiConstants.Endpoints.GET_LICENSE,
+                    username = username,
+                    password = password,
+                    useBasicAuth = useBasicAuth
+                )
             }.body<LicenseResponse>()
         } catch (e: Exception) {
             LicenseResponse(
                 subsonicResponse = LicenseResponseData(
                     status = "failed",
-                    version = version,
+                    version = AstigaApiConstants.API_VERSION,
                     error = "0",
                     message = e.message ?: "Unknown error",
                     license = License(
                         valid = false,
                         email = "",
                         licenseExpires = ""
+                    )
+                )
+            )
+        }
+    }
+
+    override suspend fun getUser(
+        targetUsername: String,
+        useBasicAuth: Boolean
+    ): UserResponse {
+
+        val username = storedUsername ?: throw IllegalStateException("Username not stored. Call ping() first.")
+        val password = storedPassword ?: throw IllegalStateException("Password not stored. Call ping() first.")
+
+        return try {
+            httpClient.get {
+                astigaEndpoint(
+                    path = AstigaApiConstants.Endpoints.GET_USER,
+                    username = username,
+                    password = password,
+                    useBasicAuth = useBasicAuth,
+                    additionalParams = mapOf("username" to targetUsername)
+                )
+            }.body<UserResponse>()
+        } catch (e: Exception) {
+            UserResponse(
+                subsonicResponse = UserResponseData(
+                    status = "failed",
+                    version = AstigaApiConstants.API_VERSION,
+                    error = "0",
+                    message = e.message ?: "Unknown error",
+                    user = User(
+                        username = "",
+                        email = "",
+                        scrobblingEnabled = false,
+                        adminRole = false,
+                        settingsRole = false,
+                        downloadRole = false,
+                        uploadRole = false,
+                        playlistRole = false,
+                        coverArtRole = false,
+                        commentRole = false,
+                        podcastRole = false,
+                        streamRole = false,
+                        jukeboxRole = false,
+                        shareRole = false
                     )
                 )
             )
@@ -82,7 +138,7 @@ class AstigaApiImpl : AstigaApi {
             socketTimeoutMillis = timeout
         }
         install(ContentNegotiation) {
-            json(Json { 
+            json(Json {
                 isLenient = true
                 ignoreUnknownKeys = true
                 prettyPrint = true
@@ -94,9 +150,8 @@ class AstigaApiImpl : AstigaApi {
         path: String,
         username: String,
         password: String,
-        version: String,
-        client: String,
-        useBasicAuth: Boolean = false
+        useBasicAuth: Boolean = false,
+        additionalParams: Map<String, String> = emptyMap()
     ) {
         // Obfuscate password with "enc:" prefix and utf8HexEncode
         val obfuscatedPassword = "enc:" + EncodingUtils.utf8HexEncode(password)
@@ -108,15 +163,20 @@ class AstigaApiImpl : AstigaApi {
             if (useBasicAuth) {
                 // Use HTTP Basic Authentication
                 header(HttpHeaders.Authorization, EncodingUtils.basicAuthEncode(username, password))
-                parameters.append("v", version)
-                parameters.append("c", client)
+                parameters.append("v", AstigaApiConstants.API_VERSION)
+                parameters.append("c", AstigaApiConstants.CLIENT_NAME)
             } else {
                 // Use query parameters
                 parameters.append("u", username)
                 parameters.append("p", obfuscatedPassword)
-                parameters.append("v", version)
-                parameters.append("c", client)
+                parameters.append("v", AstigaApiConstants.API_VERSION)
+                parameters.append("c", AstigaApiConstants.CLIENT_NAME)
             }
+
+            additionalParams.forEach { (key, value) ->
+                parameters.append(key, value)
+            }
+
             parameters.append("f", "json")
         }
     }
