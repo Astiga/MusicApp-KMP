@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Snackbar
@@ -33,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import musicapp.decompose.login.LoginComponent
 import musicapp.network.AstigaApiConstants.ASTIGA_REGISTRATION
+import musicapp.theme.buttonColor
+import musicapp.theme.colorWhite
 import musicapp.theme.gradientBrush
 import musicapp_kmp.shared.generated.resources.Res
 import musicapp_kmp.shared.generated.resources.action_sign_in
@@ -152,7 +155,13 @@ fun LoginScreen(loginComponent: LoginComponent) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
-                enabled = loginState !is LoginState.Loading
+                enabled = loginState !is LoginState.Loading,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = buttonColor,
+                    disabledContainerColor = buttonColor.copy(alpha = 0.5f),
+                    contentColor = colorWhite,
+                    disabledContentColor = colorWhite.copy(alpha = 0.5f)
+                )
             ) {
                 Text(text = stringResource(Res.string.action_sign_in))
             }
