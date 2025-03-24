@@ -48,11 +48,11 @@ kotlin {
                 }
             }
         }
-
+/*
     jvm("desktop")
     js(IR) {
         browser()
-    }
+    }*/
 
     applyDefaultHierarchyTemplate()
 
@@ -65,7 +65,7 @@ kotlin {
        }*/
 
     sourceSets {
-        val desktopMain by getting
+//        val desktopMain by getting
 
         commonMain.dependencies {
             implementation(libs.koin.core)
@@ -87,6 +87,8 @@ kotlin {
                 api(bundles.decompose)
                 implementation(image.loader)
                 implementation(essenty.lifecycle)
+                implementation(datastore.core)
+                implementation(datastore.preferences)
             }
         }
 
@@ -115,7 +117,7 @@ kotlin {
             implementation(libs.kotlin.test)
         }
 
-        desktopMain.dependencies {
+/*        desktopMain.dependencies {
             implementation(compose.desktop.common)
             implementation(libs.vlcj)
         }
@@ -136,7 +138,7 @@ kotlin {
 
         jsTest.dependencies {
             implementation(libs.kotlin.test)
-        }
+        }*/
     }
 }
 

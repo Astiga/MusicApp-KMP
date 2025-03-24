@@ -17,5 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "MusicApp-KMP"
 include(":androidApp")
 include(":shared")
-include(":desktopApp")
-include(":webApp")
+//include(":desktopApp")
+//include(":webApp")
