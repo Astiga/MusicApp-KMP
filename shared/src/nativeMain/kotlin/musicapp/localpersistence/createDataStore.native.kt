@@ -3,10 +3,9 @@ package musicapp.localpersistence
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.runBlocking
 import okio.Path.Companion.toPath
 import platform.Foundation.NSDocumentDirectory
@@ -33,7 +32,6 @@ actual fun astigaDataStore(): DataStore<Preferences> {
 
 private lateinit var dataStore: DataStore<Preferences>
 
-@OptIn(InternalCoroutinesApi::class)
 private val lock = SynchronizedObject()
 
 private fun getDataStore(producePath: () -> String): DataStore<Preferences> =
