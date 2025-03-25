@@ -5,7 +5,11 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +26,7 @@ import musicapp.decompose.login.LoginComponent
 import musicapp.decompose.login.LoginComponentImpl
 import musicapp.decompose.player.PlayerComponent
 import musicapp.decompose.player.PlayerComponentImpl
+import musicapp.localpersistence.LocalPersistenceComponents
 import musicapp.network.AstigaApi
 import musicapp.network.SpotifyApi
 import musicapp.network.models.topfiftycharts.Item
@@ -38,12 +43,18 @@ class MusicRootImpl(
     private val spotifyApi: SpotifyApi by inject()
     private val mediaPlayerController: MediaPlayerController by inject()
     private val astigaApi: AstigaApi by inject()
+    private val localPersistenceComponents: LocalPersistenceComponents by inject()
 
-    private val login: (ComponentContext, (LoginComponent.Output) -> Unit) -> LoginComponent = { childContext, output ->
-        LoginComponentImpl(
-            componentContext = childContext, astigaApi = astigaApi, output = output
-        )
-    }
+
+    private val login: (ComponentContext, (LoginComponent.Output) -> Unit) -> LoginComponent =
+        { childContext, output ->
+            LoginComponentImpl(
+                componentContext = childContext,
+                astigaApi = astigaApi,
+                output = output,
+                localPersistenceComponents = localPersistenceComponents
+            )
+        }
 
     private val dashboardMain: (ComponentContext, (DashboardMainComponent.Output) -> Unit) -> DashboardMainComponent =
         { childContext, output ->
@@ -64,14 +75,18 @@ class MusicRootImpl(
             )
         }
 
+
     //to keep track of the playing track
     private var currentPlayingTrack = "-1"
     private val musicPlayerInput = MutableSharedFlow<PlayerComponent.Input>()
     private val chatDetailsInput = MutableSharedFlow<ChartDetailsComponent.Input>()
 
     constructor(
-        componentContext: ComponentContext, api: SpotifyApi, mediaPlayerController: MediaPlayerController
+        componentContext: ComponentContext,
+        api: SpotifyApi,
+        mediaPlayerController: MediaPlayerController
     ) : this(componentContext = componentContext)
+
 
     private val navigation = StackNavigation<Configuration>()
     private val dialogNavigation = SlotNavigation<DialogConfig>()
@@ -97,7 +112,11 @@ class MusicRootImpl(
 
         is Configuration.Details -> MusicRoot.Child.Details(
             chartDetails(
-                componentContext, configuration.playlistId, currentPlayingTrack, chatDetailsInput, ::detailsOutput
+                componentContext,
+                configuration.playlistId,
+                currentPlayingTrack,
+                chatDetailsInput,
+                ::detailsOutput
             )
         )
     }
@@ -133,7 +152,12 @@ class MusicRootImpl(
             is ChartDetailsComponent.Output.OnTrackSelected -> {
                 dialogNavigation.activate(DialogConfig(output.playlist, output.trackId))
                 CoroutineScope(Dispatchers.Default).launch {
-                    musicPlayerInput.emit(PlayerComponent.Input.PlayTrack(output.trackId, output.playlist))
+                    musicPlayerInput.emit(
+                        PlayerComponent.Input.PlayTrack(
+                            output.trackId,
+                            output.playlist
+                        )
+                    )
                 }
             }
         }
