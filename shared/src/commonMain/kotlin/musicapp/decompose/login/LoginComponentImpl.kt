@@ -2,6 +2,7 @@ package musicapp.decompose.login
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreate
+import musicapp.localpersistence.LocalPersistenceComponents
 import musicapp.login.LoginViewModel
 import musicapp.network.AstigaApi
 
@@ -11,12 +12,13 @@ import musicapp.network.AstigaApi
 class LoginComponentImpl(
     componentContext: ComponentContext,
     private val astigaApi: AstigaApi,
+    private val localPersistenceComponents: LocalPersistenceComponents,
     val output: (LoginComponent.Output) -> Unit,
 ) : LoginComponent, ComponentContext by componentContext {
 
     override val viewModel: LoginViewModel
         get() = instanceKeeper.getOrCreate {
-            LoginViewModel(astigaApi)
+            LoginViewModel(astigaApi, localPersistenceComponents)
         }
 
     override fun onOutPut(output: LoginComponent.Output) {
