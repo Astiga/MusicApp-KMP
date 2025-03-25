@@ -16,8 +16,6 @@ object AstigaApiConstants {
     }
 
     object Datastore{
-        const val USERNAME = "username"
-        const val PASSWORD = "password"
         val USERNAME_TOKEN = stringPreferencesKey("username_token")
         val PASSWORD_TOKEN = stringPreferencesKey("password_token")
     }
