@@ -1,8 +1,8 @@
 package musicapp.localpersistence
 
 interface LocalPersistenceComponents {
-    fun writeWithKey(key: String, value: String)
-    fun readWithKey(key: String): String
-    suspend fun readToken(): String
-    fun writeToke(value: String)
+    suspend fun writeUserNameAndPassword(userName: String, password: String)
+    suspend fun readUserName(): String
+    suspend fun readPassword(): String
+    suspend fun deleteUserNameAndPassword()
 }
