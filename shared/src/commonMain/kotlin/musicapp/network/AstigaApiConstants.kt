@@ -8,6 +8,7 @@ object AstigaApiConstants {
     const val API_VERSION = "1.2.0"
     const val CLIENT_NAME = "Astiga"
     const val ASTIGA_REGISTRATION = "https://play.asti.ga/register"
+    const val ASTIGA_SYNC = "https://play.asti.ga/sync"
 
     object Endpoints {
         const val PING = "rest/ping"
